@@ -1,0 +1,155 @@
+*, *::after, *::before {
+  user-select: none;
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  min-width: 100vw;
+  min-height: 100vh;
+  max-width: 100vw;
+  max-height: 100vh;
+  font-family: sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  padding: 0;
+  margin: 0;
+}
+
+.app {
+  position: fixed;
+  top: 0;
+  left: 0;
+  display: grid;
+  place-items: center;
+  border: 1px solid black;
+}
+
+.app > div {
+  height: 50px;
+  width: 50px;
+  border: 1px solid black;
+  position: relative;
+}
+
+.app > div::after {
+  content: '';
+  position: absolute;
+  background: red;
+}
+
+.app > div.north::after {
+  top: 0px;
+  left: 25px;
+  height: 25px;
+  width: 1px;
+}
+
+.app > div.east::after {
+  top: 25px;
+  left: 25px;
+  height: 1px;
+  width: 25px;
+}
+
+.app > div.south::after {
+  top: 25px;
+  left: 25px;
+  height: 25px;
+  width: 1px;
+}
+
+.app > div.west::after {
+  top: 25px;
+  left: 0px;
+  height: 1px;
+  width: 25px;
+}
+
+.app > div.north.south::after {
+  top: 0;
+  left: 25px;
+  height: 50px;
+  width: 1px;
+}
+
+.app > div.east.west::after {
+  top: 25px;
+  left: 0px;
+  height: 1px;
+  width: 50px;
+}
+
+.app > div.north.east::after, .app > div.north.west::after, .app > div.south.east::after, .app > div.south.west::after {
+  width: 27px;
+  height: 27px;
+  background: initial;
+  border-width: 1px;
+  border-style: solid;
+  box-sizing: border-box;
+}
+
+.app > div.north.east::after {
+  border-left-color: red;
+  border-right-color: transparent;
+  border-top-color: transparent;
+  border-bottom-color: red;
+  top: -1px;
+  left: 25px;
+}
+
+.app > div.north.west::after {
+  border-left-color: transparent;
+  border-right-color: red;
+  border-top-color: transparent;
+  border-bottom-color: red;
+  top: -1px;
+  left: -1px;
+}
+
+.app > div.south.east::after {
+  border-left-color: red;
+  border-right-color: transparent;
+  border-top-color: red;
+  border-bottom-color: red;
+}
+
+.app > div.south.west::after {
+  border-left-color: transparent;
+  border-right-color: red;
+  border-top-color: red;
+  border-bottom-color: red;
+  left: -1px;
+}
+
+.menu {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+.menu.controls {
+  border: 1px solid black;
+  padding: 20px;
+  top: 1em;
+  right: 1em;
+  background: #fff;
+}
+
+.menu.controls .section {
+  padding: 10px 0;
+  border-bottom: 1px solid #d8d8d8;
+}
+
+.menu.controls .section > h4 {
+  padding-bottom: 5px;
+}
+
+.menu.controls .section > div {
+  padding: 4px 0;
+}
+
+.menu.controls .function {
+  width: 100%;
+}
