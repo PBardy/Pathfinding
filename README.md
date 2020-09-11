@@ -44,3 +44,11 @@ Algorithms still to implement:
 * Trace
 
 ## Screenshots
+
+<img src="screenshots/projects-pathfinding-1.jpg" alt="Screenshot 1" width="256">
+<img src="screenshots/projects-pathfinding-2.jpg" alt="Screenshot 2" width="256">
+<img src="screenshots/projects-pathfinding-3.jpg" alt="Screenshot 3" width="256">
+<img src="screenshots/projects-pathfinding-4.jpg" alt="Screenshot 4" width="256">
+<img src="screenshots/projects-pathfinding-5.jpg" alt="Screenshot 5" width="256">
+<img src="screenshots/projects-pathfinding-6.jpg" alt="Screenshot 6" width="256">
+<img src="screenshots/projects-pathfinding-7.jpg" alt="Screenshot 7" width="256">
