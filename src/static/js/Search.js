@@ -2,8 +2,10 @@ import { PriorityQueue } from './Queue.js'
 
 export class State {
 
-  constructor() {
-    
+  constructor(current, frontier, visited) {
+    this.current = current
+    this.frontier = frontier
+    this.visited = visited
   }
 
 }
@@ -11,7 +13,9 @@ export class State {
 
 export default class Search {
 
-  stackTrace = {}
+  static MAX_ITERATIONS = 10000
+
+  stackTrace = []
   visited = []
   visitedVertices = []
 
@@ -30,7 +34,9 @@ export default class Search {
   tidyUp() {
     for(let row = 0; row < this.graph.length; row++) {
       for(let column = 0; column < this.graph[row].length; column++) {
-        this.graph[row][column].parent = null
+        const cell = this.graph[row][column]
+        cell.parent = null
+        cell.heuristicData = {}
       }
     }
   }
@@ -67,17 +73,16 @@ export default class Search {
 
   static factory(type, graph, heuristic, source, target) {
     if(type === 'as')  return new AStarSearch(graph, heuristic, source, target)
-    if(type === 'ida') return new IDASearch(graph, heuristic, source, target)
     if(type === 'bfs') return new BreadthFirstSearch(graph, heuristic, source, target)
     if(type === 'dfs') return new DepthFirstSearch(graph, heuristic, source, target)
     if(type === 'dij') return new DijkstraSearch(graph, heuristic, source, target)
+    if(type === 'ida') return new IDASearch(graph, heuristic, source, target)
     if(type === 'jps') return new JumpPointSearch(graph, heuristic, source, target)
     if(type === 'ops') return new OrthogonalPointSearch(graph, heuristic, source, target)
     if(type === 'trc') return new TraceSearch(graph, heuristic, source, target)
   }
 
 }
-
 
 
 export class AStarSearch extends Search {
@@ -94,7 +99,7 @@ export class AStarSearch extends Search {
 
     frontier.enqueue(this.heuristic(this.source), this.source)
 
-    while(openSet.length > 0 && iteration < 100) {
+    while(openSet.length > 0 && iteration < Search.MAX_ITERATIONS) {
       iteration++
       current = frontier.dequeue()
 
@@ -106,7 +111,7 @@ export class AStarSearch extends Search {
 
       this.visited.push(current.id)
       this.visitedVertices.push(current)
-      this.stackTrace[iteration] = current // update stack trace
+      this.stackTrace.push(new State(current, [...this.frontier], [...this.visited])) // update stack trace
 
       neighbors = current.neighbors
       neighbors.forEach((neighbor) => {
@@ -165,7 +170,7 @@ export class BreadthFirstSearch extends Search {
 
       this.visited.push(current.id)
       this.visitedVertices.push(current)
-      this.stackTrace[iteration] = current // update stack trace
+      this.stackTrace.push(new State(current, [...this.frontier], [...this.visited])) // update stack trace
 
       neighbors = current.neighbors // explore unexplored neighbors
       neighbors.forEach((neighbor) => {
@@ -212,7 +217,7 @@ export class DepthFirstSearch extends Search {
 
       this.visited.push(current.id)
       this.visitedVertices.push(current)
-      this.stackTrace[iteration] = current // update stack trace
+      this.stackTrace.push(new State(current, [...this.frontier], [...this.visited])) // update stack trace
 
       neighbors = current.neighbors // explore unexplored neighbors
       neighbors.forEach((neighbor) => {
@@ -226,6 +231,87 @@ export class DepthFirstSearch extends Search {
 
     return this
 
+  }
+
+}
+
+
+export class DijkstraSearch extends Search {
+
+  constructor(graph, heuristic, source, target) {
+    super(graph, heuristic, source, target)
+  }
+
+  async search() {
+
+    let iteration = 0
+    let dist = {}
+    let prev = {}
+    let queue = {}
+    let vertices = this.graph.flat()
+
+    function length(u, v) {
+      const dr = u.row - v.row
+      const dc = u.column - v.column
+      return Math.sqrt(Math.pow(dr, 2), Math.pow(dc, 2))
+    }
+
+    function shortest(q, keys) {
+      let val = q[keys[0]]
+      let shortest = keys[0]
+
+      for(let key of keys) {
+        if(q[key] < val) {
+          val = q[key]
+          shortest = key
+        }
+      }
+
+      return shortest
+    }
+
+    for(let vertex of vertices) {
+      dist[vertex.id] = 1000000
+      prev[vertex.id] = undefined
+      queue[vertex.id] = vertex
+    }
+
+    dist[this.source.id] = 0
+
+    while(Object.keys(queue).length > 0 && iteration < Search.MAX_ITERATIONS) {
+      iteration++
+      const u = shortest(dist, Object.keys(queue))
+      const current = queue[u]
+
+      delete queue[u]
+
+      if(this.visited.includes(u)) continue
+      if(current.accessible === false) continue
+
+      this.visited.push(u)
+      this.visitedVertices.push(current)
+      this.stackTrace.push(new State(current, queue, this.visited)) // update stack trace
+
+      if(u === this.target.id) {
+        this.path = await this.retraceFootsteps(current)
+        return this 
+      }
+
+      if(current == null) continue
+      
+      for(let neighbor of current.neighbors) {
+        if(this.visited.includes(neighbor.id)) continue
+        const alt = dist[u] + length(current, neighbor)
+        if(alt < dist[neighbor.id]) {
+          dist[neighbor.id] = alt
+          prev[neighbor.id] = u
+          neighbor.parent = current
+        }
+      }
+
+    }
+
+    return this
   }
 
 }

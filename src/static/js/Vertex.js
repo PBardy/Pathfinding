@@ -6,6 +6,7 @@ export default class Vertex {
 
   neighbors = []
   parent = null
+  heuristicData = {}
   isSourceNode = false
   domElement = document.createElement('div')
 

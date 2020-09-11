@@ -7,6 +7,7 @@
   <title>Pathfinding</title>
 
   <link rel="stylesheet" href="./static/css/main.css" />
+  <link rel="stylesheet" href="./static/css/fonts.css" />
 
   <script src="./static/js/main.js" type="module" defer></script>
 </head>
@@ -14,104 +15,134 @@
 <body>
 
   <!-- App container -->
-  <div class="app"></div>
+  <div class="app-container">
+    <div class="app"></div>
 
-  <!-- Menu controls -->
-  <div class="menu controls">
+    <!-- Menu controls -->
+    <div class="menu controls">
 
-    <h2>Controls Panel</h2>
+      <h2>Controls</h2>
 
-    <div class="section" id="grid-configuration">
+      <div class="section" id="grid-configuration">
 
-      <h4>Grid Configuration</h4>
+        <h4>Grid Config</h4>
 
-      <!-- Changes grid width to a specific value -->
-      <div>
-        <label for="grid-width">Grid Width</label>
-        <input id="grid-width" type="number" min="3" max="20" step="1" placeholder="10" />
+        <!-- Changes grid width to a specific value -->
+        <div class="input-container">
+          <label for="grid-width">Grid Width</label>
+          <input id="grid-width" type="number" min="3" max="20" step="1" placeholder="10" />
+        </div>
+
+        <!-- Changes grid height to a specific value -->
+        <div class="input-container">
+          <label for="grid-height">Grid Height</label>
+          <input id="grid-height" type="number" min="3" max="20" step="1" placeholder="10" />
+        </div>
+
+        <!-- Changes grid width to a random value -->
+        <div>
+          <button class="function" id="randomize">
+            <span>Randomize</span>
+          </button>
+        </div>
+
+        <!-- Clears walls -->
+        <div>
+          <button class="function" id="clear-walls">
+            <span>Clear walls</span>
+          </button>
+        </div>
+
       </div>
 
-      <!-- Changes grid height to a specific value -->
-      <div>
-        <label for="grid-height">Grid Height</label>
-        <input id="grid-height" type="number" min="3" max="20" step="1" placeholder="10" />
+      <div class="section" id="search-configuration">
+
+        <h4>Search Config</h4>
+
+        <!-- Algorithm selection -->
+        <div>
+          <select class="function" id="algorithm">
+            <option>Algorithm</option>
+            <option value="as" disabled>A*</option>
+            <option value="bfs">Breadth first search</option>
+            <option value="dfs">Depth first search</option>
+            <option value="dij">Dijkstra</option>
+            <option value="ida" disabled>IDA*</option>
+            <option value="jps" disabled>Jump point search</option>
+            <option value="ops" disabled>Orthogonal point search</option>
+            <option value="trc" disabled>Trace</option>
+          </select>
+        </div>
+
+        <!-- Heuristic selection -->
+        <!-- Options populated based on algorithm -->
+        <div>
+          <select class="function" id="heuristic">
+            <option>Heuristic</option>
+            <option value="che" disabled>Chebyshev</option>
+            <option value="euc" disabled>Euclidean</option>
+            <option value="man" disabled>Manhattan</option>
+            <option value="euc" disabled>Octile</option>
+          </select>
+        </div>
+
       </div>
 
-      <!-- Changes grid width to a random value -->
-      <div>
-        <button class="function" id="randomize">
-          <span>Randomize</span>
-        </button>
+      <!-- Search controls -->
+      <div class="section" id="search-controls">
+
+        <h4>Search options</h4>
+
+        <!-- Begin search -->
+        <div>
+          <button class="function" id="begin-search">
+            <span>Begin search</span>
+          </button>
+        </div>
+
+        <!-- Clear search -->
+        <div>
+          <button class="function" id="clear-search">
+            <span>Clear search</span>
+          </button>
+        </div>
+
+        <!-- Clear all -->
+        <div>
+          <button class="function" id="clear-all">
+            <span>Clear all</span>
+          </button>
+        </div>
+
       </div>
 
-      <!-- Clears walls -->
-      <div>
-        <button class="function" id="clear-walls">
-          <span>Clear walls</span>
-        </button>
-      </div>
+      <!-- Search replay -->
+      <div class="section" id="search-replay">
 
+        <h4>Search replay</h4>
+
+        <!-- Allow replay of specific iteration -->
+        <div>
+          <span>Iteration </span>
+          <input type="number" id="iterations" min="0" step="1" />
+          <span>of </span>
+          <span id="max-iterations"></span>
+        </div>
+
+        <!-- Adjusts playback speed -->
+        <div class="input-container">
+          <label for="playback-speed">Playback speed</label>
+          <input id="playback-speed" type="number" min="0.5" max="5" step="0.1" placeholder="1" />
+        </div>
+
+        <div>
+          <button class="function" id="replay-search">
+            <span>Replay Search</span>
+          </button>
+        </div>
+
+      </div>
     </div>
-
-    <div class="section" id="search-configuration">
-
-      <h4>Search Configuration</h4>
-
-      <!-- Algorithm selection -->
-      <div>
-        <select class="function" id="algorithm">
-          <option>Algorithm</option>
-          <option value="as" disabled>A*</option>
-          <option value="ida" disabled>IDA*</option>
-          <option value="bfs">Breadth first search</option>
-          <option value="dfs">Depth first search</option>
-          <option value="dij" disabled>Dijkstra</option>
-          <option value="jps" disabled>Jump point search</option>
-          <option value="ops" disabled>Orthogonal point search</option>
-          <option value="trc" disabled>Trace</option>
-        </select>
-      </div>
-
-      <!-- Heuristic selection -->
-      <!-- Options populated based on algorithm -->
-      <div>
-        <select class="function" id="heuristic">
-          <option>Heuristic</option>
-          <option value="che" disabled>Chebyshev</option>
-          <option value="euc" disabled>Euclidean</option>
-          <option value="man" disabled>Manhattan</option>
-          <option value="euc" disabled>Octile</option>
-        </select>
-      </div>
-
-    </div>
-
-    <!-- Search controls -->
-    <div class="section" id="search-controls">
-
-      <!-- Begin search -->
-      <div>
-        <button class="function" id="begin-search">
-          <span>Begin search</span>
-        </button>
-      </div>
-
-      <!-- Clear search -->
-      <div>
-        <button class="function" id="clear-search">
-          <span>Clear search</span>
-        </button>
-      </div>
-
-      <!-- Clear all -->
-      <div>
-        <button class="function" id="clear-all">
-          <span>Clear all</span>
-        </button>
-      </div>
-
-    </div>
-
   </div>
 </body>
 

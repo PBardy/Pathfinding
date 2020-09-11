@@ -37,16 +37,10 @@ export default class Grid {
     } while(true)
   }
 
-  highlightVertex(vertex, color) {
-    if(vertex == null) return
-    if(vertex.isSourceNode && vertex.domElement.style.backgroundColor) return
-    vertex.domElement.style.backgroundColor = color
-  }
-
   highlightVertices(vertices, color) {
     if(vertices == null) return
     if(vertices.length == 0) return
-    vertices.forEach(vertex => this.highlightVertex(vertex, color))
+    vertices.forEach(vertex => vertex.highlight(color))
   }
 
   highlightPath(path) {
@@ -126,9 +120,9 @@ export default class Grid {
       for(let column = 0; column < this.width; column++) {
         const vertex = this.getCell(row, column)
         if(vertex == null) continue
-        if(vertex.isSourceNode) continue
         if(vertex.accessible === false) continue
         vertex.clearPath()
+        if(vertex.isSourceNode) continue
         vertex.highlight(Colors.empty)
       }
     }
